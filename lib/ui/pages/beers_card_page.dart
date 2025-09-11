@@ -1,5 +1,6 @@
 import 'package:app_beers/api/beers_api.dart';
 import 'package:app_beers/data_classes/beers.dart';
+import 'package:app_beers/shared/app_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 

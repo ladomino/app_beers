@@ -1,3 +1,4 @@
+import 'package:app_beers/shared/app_router.dart';
 import 'package:app_beers/ui/pages/beers_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,13 +10,27 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  ThemeData _createTheme(Brightness brightness) {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: brightness,
+      fontFamily: 'Times New Roman', 
+      appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+        ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      key: Key('BeersApp'),
+    return MaterialApp.router(
+      key: const Key('BeersApp'),
       title: 'Flutter Beers App',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: MyHomePage(),
+      theme: _createTheme(Brightness.light),
+      darkTheme: _createTheme(Brightness.dark),
+      themeMode: ThemeMode.system,
+      routerConfig: AppRouter.router,
     );
   }
 }
@@ -28,8 +43,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       key: Key('Beers'),
       appBar: AppBar(

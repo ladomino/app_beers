@@ -1,4 +1,5 @@
 import 'package:app_beers/providers/beers_provider.dart';
+import 'package:app_beers/shared/app_router.dart';
 import 'package:app_beers/ui/pages/beers_card_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -75,20 +76,24 @@ class _BeersListPageState extends ConsumerState<BeersListPage> {
     // Show empty state
     if (beersState.beers.isEmpty && !beersState.isLoading) {
       return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.sentiment_dissatisfied, size: 64, color: Colors.grey),
-          const SizedBox(height: 16),
-          const Text('No beers available', style: TextStyle(fontSize: 18)),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () => ref.read(beersProvider.notifier).refresh(),
-            child: const Text('Try Again'),
-          ),
-        ],
-      ),
-    );
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.sentiment_dissatisfied,
+              size: 64,
+              color: Colors.grey,
+            ),
+            const SizedBox(height: 16),
+            const Text('No beers available', style: TextStyle(fontSize: 18)),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => ref.read(beersProvider.notifier).refresh(),
+              child: const Text('Try Again'),
+            ),
+          ],
+        ),
+      );
     }
 
     // Show list with data
@@ -105,15 +110,16 @@ class _BeersListPageState extends ConsumerState<BeersListPage> {
               child: Center(child: CircularProgressIndicator()),
             );
           }
-      
+
           final beer = beersState.beers[index];
           return BeerListCard(
             beer: beer,
             onTap: () {
-              // TODO: Navigate to beer details page
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('Tapped on ${beer.name}')));
+              AppRouter.goToBeerDetail(context, beer);
+
+              // ScaffoldMessenger.of(
+              //   context,
+              // ).showSnackBar(SnackBar(content: Text('Tapped on ${beer.name}')));
             },
           );
         },
