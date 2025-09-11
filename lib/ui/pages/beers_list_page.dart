@@ -1,4 +1,5 @@
 import 'package:app_beers/providers/beers_provider.dart';
+import 'package:app_beers/providers/search_provider.dart';
 import 'package:app_beers/shared/app_router.dart';
 import 'package:app_beers/ui/pages/beers_card_page.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,7 @@ class _BeersListPageState extends ConsumerState<BeersListPage> {
   @override
   Widget build(BuildContext context) {
     final beersState = ref.watch(beersProvider);
+    final filteredBeers = ref.watch(filteredBeersProvider);
 
     // Show error state
     if (beersState.error != null && beersState.beers.isEmpty) {
@@ -96,14 +98,20 @@ class _BeersListPageState extends ConsumerState<BeersListPage> {
       );
     }
 
+    // Calculate if we should show the loading indicator
+    // Only show it if we have more jokes available AND we're not currently filtering
+    final shouldShowLoadingIndicator = beersState.hasMore && 
+                                    filteredBeers.length == beersState.beers.length;
+
+
     // Show list with data
     return RefreshIndicator(
       onRefresh: () => ref.read(beersProvider.notifier).refresh(),
       child: ListView.builder(
         controller: _scrollController,
-        itemCount: beersState.beers.length + (beersState.isLoading ? 1 : 0),
+        itemCount: filteredBeers.length + (shouldShowLoadingIndicator ? 1 : 0),
         itemBuilder: (context, index) {
-          if (index >= beersState.beers.length) {
+          if (index >= filteredBeers.length) {
             // Show loading indicator at the bottom
             return const Padding(
               padding: EdgeInsets.all(16.0),
@@ -111,7 +119,7 @@ class _BeersListPageState extends ConsumerState<BeersListPage> {
             );
           }
 
-          final beer = beersState.beers[index];
+          final beer = filteredBeers[index];
           return BeerListCard(
             beer: beer,
             onTap: () {

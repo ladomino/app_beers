@@ -1,3 +1,4 @@
+import 'package:app_beers/providers/search_provider.dart';
 import 'package:app_beers/shared/app_router.dart';
 import 'package:app_beers/ui/pages/beers_list_page.dart';
 import 'package:flutter/material.dart';
@@ -34,19 +35,12 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends ConsumerWidget {
   const MyHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
 
-class _MyHomePageState extends State<MyHomePage> {
-
-  @override
-  Widget build(BuildContext context) {
-    
     return Scaffold(
       key: Key('Beers'),
       appBar: AppBar(
@@ -65,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           child: TextField(
             onChanged: (value) {
-              //ref.read(searchHelperProvider).searchString = value;
+              ref.read(searchHelperProvider).searchString = value;
             },
             decoration: const InputDecoration(
               hintText: 'Search Beers',
