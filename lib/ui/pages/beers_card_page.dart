@@ -1,4 +1,6 @@
+import 'package:app_beers/api/beers_api.dart';
 import 'package:app_beers/data_classes/beers.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class BeerListCard extends StatelessWidget {
@@ -10,6 +12,7 @@ class BeerListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      key: Key('Card_${beer.id}'),
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -23,6 +26,7 @@ class BeerListCard extends StatelessWidget {
           ),
         ),
         child: ListTile(
+          key: Key('Tile_${beer.id}'),
           contentPadding: const EdgeInsets.all(16),
           leading: Container(
             width: 50,
@@ -32,13 +36,26 @@ class BeerListCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(25),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.amber.withOpacity(0.3),
+                  color: Colors.amber.withValues(alpha: 0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
               ],
             ),
-            child: const Icon(Icons.sports_bar, color: Colors.white, size: 28),
+            child: ClipRRect(
+              key: Key('Image_${beer.id}'),
+              borderRadius: BorderRadius.circular(25),
+              child: CachedNetworkImage(
+              imageUrl: BeerApi.getImageUrl(beer.id),
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+              fit: BoxFit.cover,
+              width: 50,
+              height: 50,
+            ),
+            ),
+            
+            //const Icon(Icons.sports_bar, color: Colors.white, size: 28),
           ),
           title: Text(
             beer.name,
