@@ -1,11 +1,13 @@
 import 'package:app_beers/data_classes/beers.dart';
 import 'package:app_beers/main.dart';
 import 'package:app_beers/ui/pages/beer_detail_page.dart';
+import 'package:app_beers/ui/pages/beer_favorites_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
   static const String home = '/';
+  static const String favorites = '/favorites';
   static const String beerDetail = '/beer/:id';
 
   static final GoRouter router = GoRouter(
@@ -15,6 +17,11 @@ class AppRouter {
         path: home,
         name: 'home',
         builder: (context, state) => const MyHomePage(),
+      ),
+      GoRoute(
+        path: favorites,
+        name: 'favorites',
+        builder: (context, state) => const FavoritesPage(),
       ),
       GoRoute(
         path: beerDetail,
@@ -50,6 +57,10 @@ class AppRouter {
   // Helper methods for navigation
   static void goToHome(BuildContext context) {
     context.go(home);
+  }
+
+  static void goToFavorites(BuildContext context) {
+    context.go(favorites);
   }
 
   static void goToBeerDetail(BuildContext context, Beer beer) {

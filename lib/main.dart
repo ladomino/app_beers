@@ -3,6 +3,7 @@ import 'package:app_beers/shared/app_router.dart';
 import 'package:app_beers/ui/pages/beers_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 void main() {
   runApp(ProviderScope(child: MyApp()));
@@ -40,6 +41,7 @@ class MyHomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentLocation = GoRouterState.of(context).matchedLocation;
 
     return Scaffold(
       key: Key('Beers'),
@@ -74,6 +76,36 @@ class MyHomePage extends ConsumerWidget {
         ),
       ),
       body: BeersListPage(),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentLocation == AppRouter.favorites ? 1 : 0,
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              AppRouter.goToHome(context);
+              break;
+            case 1:
+              AppRouter.goToFavorites(context);
+              break;
+          }
+        },
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.amber.shade700,
+        unselectedItemColor: Colors.grey.shade600,
+        backgroundColor: Colors.white,
+        elevation: 8,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            activeIcon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border),
+            activeIcon: Icon(Icons.favorite),
+            label: 'Favorites',
+          ),
+        ],
+      ),
     );
   }
 }

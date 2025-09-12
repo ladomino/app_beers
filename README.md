@@ -23,3 +23,8 @@ and refresh.
 
 *Important to know How data is used/stored for rebuilds and whether it changed on the backend frequently or not when building pages!!
 
+Beers List Page
+Beers Details Page - Allowing Rating a beer and Adding to Favorites
+Beers Favorites Page
+Bottom Nativation Bar with Home and Favorites
+

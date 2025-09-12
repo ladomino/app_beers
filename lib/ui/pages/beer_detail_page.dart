@@ -1,5 +1,6 @@
 import 'package:app_beers/api/beers_api.dart';
 import 'package:app_beers/data_classes/beers.dart';
+import 'package:app_beers/providers/favorites_provider.dart';
 import 'package:app_beers/providers/rating_provider.dart';
 import 'package:app_beers/shared/app_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -159,6 +160,28 @@ class BeerDetailPage extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => AppRouter.goToHome(context),
         ),
+        actions: [
+          Consumer(
+            builder: (context, ref, child) {
+              final favoriteBeers = ref.watch(favoritesProvider);
+              final isFavorite = favoriteBeers.any(
+                (favBeer) => favBeer.id == beerId,
+              );
+
+              return IconButton(
+                icon: Icon(
+                  isFavorite ? Icons.favorite : Icons.favorite_border,
+                  color: isFavorite ? Colors.red : null,
+                ),
+                onPressed: () {
+                  if (beer != null) {
+                    ref.read(favoritesProvider.notifier).toggleFavorite(beer!);
+                  }
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: beer == null
           ? const Center(child: CircularProgressIndicator())
