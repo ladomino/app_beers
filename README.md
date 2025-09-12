@@ -15,3 +15,11 @@ This application uses CachedNetworkImage for displaying Beers Image
 
 State Management for this app is Riverpod.
 
+For Infinite Scroll a StateNotifier is used as the state data is
+added to.  So scrolling will load new data and only cause 
+efficient rebuilds.    If a FutureProvider was used that is Stateless and
+would require saving/controlling the fetched data to support Infinite scroll 
+and refresh.
+
+*Important to know How data is used/stored for rebuilds and whether it changed on the backend frequently or not when building pages!!
+
