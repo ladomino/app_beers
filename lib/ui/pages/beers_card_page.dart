@@ -48,7 +48,7 @@ class BeerListCard extends StatelessWidget {
               child: CachedNetworkImage(
               imageUrl: BeerApi.getImageUrl(beer.id),
               placeholder: (context, url) => CircularProgressIndicator(),
-              errorWidget: (context, url, error) => Icon(Icons.error),
+              errorWidget: (context, url, error) => Icon(Icons.sports_bar),
               fit: BoxFit.cover,
               width: 50,
               height: 50,
