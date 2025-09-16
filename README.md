@@ -31,5 +31,18 @@ Bottom Nativation Bar with Home and Favorites
 Preserve Scroll Position on Beer List Page for any nav back to beer list page.
 Bottom Nav tabs - have no transition
 
-### Screenshots
+### App UI
+
+###  Beer List
+<img src="assets/images/list.png" width="300">
+
+### Favorites
+<img src="assets/images/favorites.png" width="300">
+
+### Details
+<img src="assets/images/details.png" width="300">
+
+### Search
+<img src="assets/images/search.png" width="300">
+
 
