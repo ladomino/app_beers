@@ -1,12 +1,17 @@
 import 'package:app_beers/providers/search_provider.dart';
 import 'package:app_beers/shared/app_router.dart';
-import 'package:app_beers/ui/pages/beers_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+final PageStorageBucket _bucket = PageStorageBucket();
+
 void main() {
-  runApp(ProviderScope(child: MyApp()));
+  runApp(
+    ProviderScope(
+      child: PageStorage(bucket: _bucket, child: MyApp()),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -16,11 +21,11 @@ class MyApp extends StatelessWidget {
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
-      fontFamily: 'Times New Roman', 
+      fontFamily: 'Times New Roman',
       appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
-        ),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+      ),
     );
   }
 
@@ -36,12 +41,19 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+// Child is being passed here because we keep track of the scroll position
+// The ShellRoute provides the nested route widget (either BeersListPage or FavoritesPage) as child.
 class MyHomePage extends ConsumerWidget {
-  const MyHomePage({super.key});
+  final Widget child;
+  const MyHomePage({super.key, required this.child});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print('MyHomePage being rebuilt');
+    
     final currentLocation = GoRouterState.of(context).matchedLocation;
+    print('Current location: $currentLocation');
 
     return Scaffold(
       key: Key('Beers'),
@@ -75,10 +87,11 @@ class MyHomePage extends ConsumerWidget {
           ),
         ),
       ),
-      body: BeersListPage(),
+      body: child,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentLocation == AppRouter.favorites ? 1 : 0,
         onTap: (index) {
+          print('Bottom navigation bar item tapped at index $index');
           switch (index) {
             case 0:
               AppRouter.goToHome(context);

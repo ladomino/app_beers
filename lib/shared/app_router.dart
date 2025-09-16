@@ -2,6 +2,7 @@ import 'package:app_beers/data_classes/beers.dart';
 import 'package:app_beers/main.dart';
 import 'package:app_beers/ui/pages/beer_detail_page.dart';
 import 'package:app_beers/ui/pages/beer_favorites_page.dart';
+import 'package:app_beers/ui/pages/beers_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,18 +11,28 @@ class AppRouter {
   static const String favorites = '/favorites';
   static const String beerDetail = '/beer/:id';
 
-  static final GoRouter router = GoRouter(
+  static final GoRouter router = 
+  GoRouter(
     initialLocation: home,
     routes: [
-      GoRoute(
-        path: home,
-        name: 'home',
-        builder: (context, state) => const MyHomePage(),
-      ),
-      GoRoute(
-        path: favorites,
-        name: 'favorites',
-        builder: (context, state) => const FavoritesPage(),
+     ShellRoute(
+        builder: (context, state, child) => MyHomePage(child: child),
+        routes: [
+          GoRoute(
+            path: home,
+            name: 'home',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: BeersListPage(),
+            ),
+          ),
+          GoRoute(
+            path: favorites,
+            name: 'favorites',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: FavoritesPage(),
+            ),
+          ),
+        ],
       ),
       GoRoute(
         path: beerDetail,
@@ -35,6 +46,7 @@ class AppRouter {
         },
       ),
     ],
+    
     errorBuilder: (context, state) => Scaffold(
       body: Center(
         child: Column(
@@ -54,16 +66,19 @@ class AppRouter {
     ),
   );
 
-  // Helper methods for navigation
+  // Helper methods for Details page - push
+  static void goToBeerDetail(BuildContext context, Beer beer) {
+    context.push('/beer/${beer.id}', extra: beer);
+  }
+
+  // Helper methods for navigation bar actions
   static void goToHome(BuildContext context) {
     context.go(home);
   }
 
   static void goToFavorites(BuildContext context) {
+    print('Go to favorites page');
     context.go(favorites);
   }
 
-  static void goToBeerDetail(BuildContext context, Beer beer) {
-    context.go('/beer/${beer.id}', extra: beer);
-  }
 }

@@ -13,12 +13,38 @@ class BeersListPage extends ConsumerStatefulWidget {
 }
 
 class _BeersListPageState extends ConsumerState<BeersListPage> {
-  final ScrollController _scrollController = ScrollController();
+  final String _scrollStorageKey = 'beer-list-scroll-position';
+  late final ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
+
+    _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
+
+    // Restore scroll position after the widget is built and attached
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _restoreScrollPosition();
+    });
+  }
+
+  void _restoreScrollPosition() {
+    final savedOffset =
+        PageStorage.of(
+              context,
+            ).readState(context, identifier: _scrollStorageKey)
+            as double? ??
+        0.0;
+
+    if (savedOffset > 0 && _scrollController.hasClients) {
+      // Use a small delay to ensure the ListView is fully built
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (_scrollController.hasClients) {
+          _scrollController.jumpTo(savedOffset);
+        }
+      });
+    }
   }
 
   @override
@@ -28,6 +54,13 @@ class _BeersListPageState extends ConsumerState<BeersListPage> {
   }
 
   void _onScroll() {
+    final offset = _scrollController.offset;
+
+    // Save scroll offset manually
+    PageStorage.of(
+      context,
+    ).writeState(context, offset, identifier: _scrollStorageKey);
+
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
       // Load more when user is 200 pixels from the bottom
@@ -37,6 +70,8 @@ class _BeersListPageState extends ConsumerState<BeersListPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('Beers list page rebuilding ...');
+    
     final beersState = ref.watch(beersProvider);
     final filteredBeers = ref.watch(filteredBeersProvider);
 
@@ -100,14 +135,14 @@ class _BeersListPageState extends ConsumerState<BeersListPage> {
 
     // Calculate if we should show the loading indicator
     // Only show it if we have more jokes available AND we're not currently filtering
-    final shouldShowLoadingIndicator = beersState.hasMore && 
-                                    filteredBeers.length == beersState.beers.length;
-
+    final shouldShowLoadingIndicator =
+        beersState.hasMore && filteredBeers.length == beersState.beers.length;
 
     // Show list with data
     return RefreshIndicator(
       onRefresh: () => ref.read(beersProvider.notifier).refresh(),
       child: ListView.builder(
+        key: const ValueKey('BeerListView'),
         controller: _scrollController,
         itemCount: filteredBeers.length + (shouldShowLoadingIndicator ? 1 : 0),
         itemBuilder: (context, index) {

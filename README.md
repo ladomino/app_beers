@@ -8,10 +8,11 @@ This is an application that uses a Public API to retrieve Beers and images.
 The goal is to show usage of a variety of packages, techniques used in Flutter
 applications.
 
-This application uses go_router for easier routing
+This application uses go_router for easier routing and shell routing for bottom nav.
 This application uses Infinite Scroll for Beers List Page
 This application uses Refresh Pulldown for Beers List Page
 This application uses CachedNetworkImage for displaying Beers Image
+This application saves Scroll position for Beers List Page and works with the Infinite Scroll.
 
 State Management for this app is Riverpod.
 
@@ -27,4 +28,6 @@ Beers List Page
 Beers Details Page - Allowing Rating a beer and Adding to Favorites
 Beers Favorites Page
 Bottom Nativation Bar with Home and Favorites
+Preserve Scroll Position on Beer List Page for any nav back to beer list page.
+Bottom Nav tabs - have no transition
 
