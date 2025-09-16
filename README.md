@@ -31,3 +31,5 @@ Bottom Nativation Bar with Home and Favorites
 Preserve Scroll Position on Beer List Page for any nav back to beer list page.
 Bottom Nav tabs - have no transition
 
+### Screenshots
+
